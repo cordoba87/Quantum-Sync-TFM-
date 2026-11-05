@@ -1,0 +1,38 @@
+# Qué NO se sube al repositorio del TFM.
+# Para subir algo de lo de abajo, borra su línea y haz git add + commit + push.
+
+# --- PDFs ---
+# Los artículos y libros viven en esta carpeta pero se catalogan en Zotero (y tienen
+# derechos de autor); los PDF compilados de LaTeX se regeneran. Solo se suben las
+# figuras de Mathematica.
+*.pdf
+!Mathematica/**/*.pdf
+
+# --- Compilación de LaTeX (LaTeX Workshop saca todo a build/) ---
+build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex*
+*.toc
+
+# --- Material de trabajo que, de momento, no es para los tutores ---
+Guia/
+reports/
+research_notes/
+
+# --- Cuadernos de terceros (suplemento de Manzano 2020) ---
+Lindblad_Manzano/
+
+# --- Basura del sistema ---
+__MACOSX/
+.DS_Store
+Thumbs.db
+desktop.ini
+__pycache__/

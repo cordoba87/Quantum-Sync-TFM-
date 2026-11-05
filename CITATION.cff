@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+type: software
+title: "Quantum synchronization in the phase representation: code and notes for the master's thesis"
+abstract: >-
+  Mathematica code and LaTeX notes for the master's thesis "Low Dimensional
+  Topological Lattices for the Transfer of Quantum Information" (Máster en Física
+  Teórica, Universidad Complutense de Madrid, 2026-27), supervised by Gloria Platero
+  and Álvaro Gómez-León. The quantum van der Pol oscillator is solved with the
+  Lindblad equation directly in the phase representation.
+authors:
+  - family-names: "Córdoba Burgueño"
+    given-names: "Mario"
+repository-code: "https://github.com/cordoba87/TFM-quantum-synchronization"
+url: "https://github.com/cordoba87/TFM-quantum-synchronization"
+keywords:
+  - quantum synchronization
+  - van der Pol oscillator
+  - phase representation
+  - Lindblad master equation
+  - open quantum systems
+  - Wolfram Mathematica

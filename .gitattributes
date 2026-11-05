@@ -1,0 +1,7 @@
+# Los cuadernos de Mathematica guardan posiciones en bytes (caché del esquema):
+# git no debe cambiarles los saltos de línea.
+*.nb -text
+*.wl -text
+*.m  -text
+
+*.pdf binary
