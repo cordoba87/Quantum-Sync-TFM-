@@ -27,6 +27,7 @@ comprobación.
 | `Mathematica/vdp_forzado.nb` | VdP forzado en Fock: $P(\theta)$, lengua de Arnold y núcleo $K$. |
 | `Mathematica/vdp_funcion_generatriz.nb` | Sector $k=0$ sin truncar Fock: función generatriz $G(z)$, ecuación de Kummer y comparación con Fock. |
 | `Mathematica/vdp_forzado_fase.nb` | El caso forzado escrito directamente en la representación de fase. |
+| `Mathematica/vdp_corte_k.nb` | Corte en sectores $\vert k\vert \le K$: estacionario en la banda y cómo cambia la distribución de fase con el corte. |
 | `Mathematica/figuras/` | Figuras exportadas de los cuadernos. |
 | `Notas/notas-tutores.tex` | Notas para los tutores. |
 | `Notas/apuntes-vdp-fase.tex` | Apuntes de trabajo: el VdP en la representación de fase. |

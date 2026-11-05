@@ -12,7 +12,10 @@
    - vec(ρ) apila columnas: vec(AρB) = (Bᵀ⊗A) vec(ρ).
    - Los parámetros simbólicos se tratan como reales (daga no conjuga símbolos).
    - Operadores: se escriben con a, ad y ** (NonCommutativeMultiply), p. ej. Δ ad**a.
-     Ojo: E es el número e en Mathematica; para la amplitud del forzamiento usa ℰ. *)
+     Ojo: E es el número e en Mathematica; para la amplitud del forzamiento usa ℰ.
+   - Desde el 2026-11-05: centro y diferencia (Θ, φ), sectores k y corte |k| ≤ K
+     (nucleoCD, vectorSector, nucleoSector, ordenPorSectores, posicionesBanda,
+     estacionarioEnBanda). Lo anterior se revisó y comprobó ese día sin cambios. *)
 
 BeginPackage["RepresentacionFase`"];
 
@@ -42,6 +45,15 @@ accionDer::usage = "accionDer[op, K, d] es el núcleo de ρ·op (ec. 42: ρa →
 lindbladFase::usage = "lindbladFase[K, H, saltos, d] = ∂t K: la ecuación de Lindblad escrita en la representación de fase con el diccionario de las notas.";
 liouvillianoDesdeFase::usage = "liouvillianoDesdeFase[H, saltos, d] construye la matriz de FLS desde la representación de fase: aplica lindbladFase a cada modo de Fourier e^{-inθ}e^{imθp} y lee sus coeficientes (columna por columna). Tiene que coincidir con liouvilliano[H, saltos, d].";
 comprobarDiccionario::usage = "comprobarDiccionario[H, saltos, d] aplica lindbladFase al núcleo de una ρ genérica y lo compara con el Liouvilliano de Fock. Devuelve True si coinciden.";
+
+\[CapitalTheta]::usage = "Θ = (θ + θp)/2: ángulo centro (la fase).";
+\[CurlyPhi]::usage = "φ = θ - θp: ángulo diferencia (el conjugado del número).";
+nucleoCD::usage = "nucleoCD[ρ] = K(Θ, φ) = Σ ρnm e^{-i(n-m)Θ} e^{-i(n+m)φ/2}: el núcleo con θ = Θ + φ/2 y θp = Θ - φ/2.";
+vectorSector::usage = "vectorSector[ρ, k] = x_k: la diagonal k de ρ en columna, (ρ_{k,0}, ρ_{k+1,1}, …) = (c_0, c_1, …) si k ≥ 0, y (ρ_{0,|k|}, ρ_{1,|k|+1}, …) si k < 0.";
+nucleoSector::usage = "nucleoSector[ρ, k] = K_k(φ) = Σ_n c_n e^{-i(n+|k|/2)φ}, con c_n = vectorSector[ρ, k]. Cumple K(Θ, φ) = Σ_k e^{-ikΘ} K_k(φ).";
+ordenPorSectores::usage = "ordenPorSectores[d] da las posiciones de vecFLS ordenadas como en la §6 de las notas: k = -(d-1), …, d-1 y, dentro de cada sector, n creciente. ℒ[[o, o]] con o = ordenPorSectores[d] es la matriz tridiagonal por bloques.";
+posicionesBanda::usage = "posicionesBanda[d, K] da las posiciones de vecFLS con |n - m| ≤ K (el corte en k), en el mismo orden que ordenPorSectores.";
+estacionarioEnBanda::usage = "estacionarioEnBanda[M, d, K] resuelve M·x = 0 con Tr ρ = 1, donde M es la matriz restringida a |n - m| ≤ K y escrita en el orden de posicionesBanda[d, K]. Devuelve ρ (d×d, con ceros fuera de la banda). Trabaja con números.";
 
 matrizFock::orden = "Hay un producto de operadores escrito con * (conmutativo). Usa ** para fijar el orden.";
 matrizFock::forma = "No sé traducir `1` a matriz.";
@@ -182,6 +194,34 @@ comprobarDiccionario[h_, saltos_List, d_Integer] := Module[{r, rho, fase, fock},
   fase = coefsUV[lindbladFaseUV[aUV[nucleo[rho]], h, saltos, d], d];
   fock = matrizDeVec[liouvilliano[h, saltos, d] . vecFLS[rho], d];
   Simplify[fase - fock] === ConstantArray[0, {d, d}]];
+
+(* ---------- Centro y diferencia: Θ = (θ+θp)/2, φ = θ - θp ----------
+   ρnm e^{-inθ} e^{imθp} = ρnm e^{-ikΘ} e^{-i(n+m)φ/2}, con k = n - m. El sector k
+   es la diagonal k de ρ; dentro de él, \hat N = i∂φ vale n + |k|/2 sobre c_n. *)
+
+nucleoCD[r_?MatrixQ] := With[{d = Length[r]},
+  Sum[r[[n + 1, m + 1]] Exp[-I (n - m) \[CapitalTheta]] Exp[-I (n + m) \[CurlyPhi]/2], {n, 0, d - 1}, {m, 0, d - 1}]];
+
+vectorSector[r_?MatrixQ, k_Integer] := With[{d = Length[r]},
+  If[k >= 0, Table[r[[n + k + 1, n + 1]], {n, 0, d - 1 - k}],
+   Table[r[[n + 1, n - k + 1]], {n, 0, d - 1 + k}]]];
+
+nucleoSector[r_?MatrixQ, k_Integer] := With[{c = vectorSector[r, k]},
+  Sum[c[[n + 1]] Exp[-I (n + Abs[k]/2) \[CurlyPhi]], {n, 0, Length[c] - 1}]];
+
+(* posición en vecFLS de ρnm: n + d m + 1. Sector k ≥ 0: ρ_{n+k,n}; k < 0: ρ_{n,n-k} *)
+posicionSector[d_, k_, n_] := If[k >= 0, (n + k) + d n + 1, n + d (n - k) + 1];
+posicionesBanda[d_Integer, K_Integer] := Flatten[
+  Table[posicionSector[d, k, n], {k, -K, K}, {n, 0, d - 1 - Abs[k]}]];
+ordenPorSectores[d_Integer] := posicionesBanda[d, d - 1];
+
+estacionarioEnBanda[M_?MatrixQ, d_Integer, K_Integer] := Module[
+  {pos = posicionesBanda[d, K], A = N[M], fila00, x, v},
+  fila00 = First[FirstPosition[pos, 1]];                         (* ρ00 *)
+  A[[fila00]] = If[MemberQ[Table[n + d n + 1, {n, 0, d - 1}], #], 1., 0.] & /@ pos;  (* Tr ρ = 1 *)
+  x = LinearSolve[A, UnitVector[Length[pos], fila00]];
+  v = ConstantArray[0., d^2]; v[[pos]] = x;
+  Chop[matrizDeVec[v, d]]];
 
 End[];
 EndPackage[];

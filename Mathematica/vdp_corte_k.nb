@@ -1,0 +1,663 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     25929,        654]
+NotebookOptionsPosition[     23119,        615]
+NotebookOutlinePosition[     23442,        629]
+CellTagsIndexPosition[     23399,        626]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+VdP forzado en el l\[IAcute]mite cu\[AAcute]ntico: estacionario con corte en k\
+\>", "Title",ExpressionUUID->"7c3d1338-b270-e541-8798-9ddf93df677b"],
+
+Cell["\<\
+Se construye la ecuaci\[OAcute]n de Lindblad en las dos coordenadas de fase, \
+(\[Theta], \[Theta]') y (\[CapitalTheta], \[CurlyPhi]), se comprueba que dan \
+la misma matriz que Fock y se calcula el estacionario guardando solo los \
+sectores |k| \[LessEqual] K. Convenios de las notas: H = \[CapitalDelta] a\
+\[Dagger]a + (\[ScriptCapitalE]/2)(a + a\[Dagger]) en el marco del \
+forzamiento, \[Kappa]p \|01d49f[a\[Dagger]] + \[Kappa]m \|01d49f[a\.b2]. En \
+Mathematica E es el n\[UAcute]mero e: la amplitud es \[ScriptCapitalE].\
+\>", "Text",ExpressionUUID->"f4892a32-a639-c948-b13a-8c463df5b399"],
+
+Cell["0. Paquete y par\[AAcute]metros", "Section",ExpressionUUID->"d3d833d0-2fe4-2a42-9565-14da248ab550"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+     " ", "\"\<RepresentacionFase.wl\>\""}], "}"}], "]"}], "]"}]], "Input",Exp\
+ressionUUID->"26c6c21c-b479-9745-92fd-2f84274c5915"],
+
+Cell["\<\
+L\[IAcute]mite cu\[AAcute]ntico: r = \[Kappa]p/\[Kappa]m \[LessLess] 1. d es \
+el largo de cada diagonal (niveles de Fock) y no depende de K.\
+\>", "Text",ExpressionUUID->"2b51a0a6-b4fe-a448-a2fb-9725323073be"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[Kappa]p", " ", "=", " ", "1"}], ";", " ", 
+  RowBox[{"\[Kappa]m", " ", "=", " ", "50"}], ";", " ", 
+  RowBox[{"\[CapitalDelta]", " ", "=", " ", 
+   RowBox[{"1", "/", "2"}]}], ";", " ", 
+  RowBox[{"\[ScriptCapitalE]", " ", "=", " ", "1"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"d", " ", "=", " ", "6"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"H", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"\[CapitalDelta]", " ", 
+     RowBox[{"ad", " ", "**", " ", "a"}]}], " ", "+", " ", 
+    RowBox[{
+     RowBox[{"\[ScriptCapitalE]", "/", "2"}], " ", 
+     RowBox[{"(", 
+      RowBox[{"a", " ", "+", " ", "ad"}], ")"}]}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"saltos", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Kappa]p", ",", " ", 
+       RowBox[{"+", "1"}]}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"\[Kappa]m", ",", " ", 
+       RowBox[{"-", "2"}]}], "}"}]}], "}"}]}], ";"}]}], "Input",ExpressionUUID\
+->"8e9fa79d-d840-cb40-8a7c-0b6fabd40c07"],
+
+Cell["1. Fase (\[Theta], \[Theta]')", "Section",ExpressionUUID->"6491a513-2681-764c-ad9a-ecc02b07752f"],
+
+Cell["\<\
+liouvillianoDesdeFase aplica la ecuaci\[OAcute]n del n\[UAcute]cleo con el \
+diccionario de las notas (a\[Rho] \[RightArrow] \
+e^{i\[Theta]}\[Sqrt]D_\[Theta] K, \[Ellipsis]) a cada modo \
+e^{-in\[Theta]}e^{im\[Theta]'} y lee sus coeficientes. Tiene que salir la \
+matriz de Fock.\
+\>", "Text",ExpressionUUID->"17cce7ca-81e3-ed49-bbbb-686066380d2b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[ScriptCapitalL]fase", " ", "=", " ", 
+   RowBox[{"liouvillianoDesdeFase", "[", 
+    RowBox[{"H", ",", " ", "saltos", ",", " ", "d"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Simplify", "[", 
+   RowBox[{"\[ScriptCapitalL]fase", " ", "-", " ", 
+    RowBox[{"liouvilliano", "[", 
+     RowBox[{"H", ",", " ", "saltos", ",", " ", "d"}], "]"}]}], "]"}], " ", "===",
+   " ", 
+  RowBox[{"ConstantArray", "[", 
+   RowBox[{"0", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"d", "^", "2"}], ",", " ", 
+      RowBox[{"d", "^", "2"}]}], "}"}]}], "]"}]}]}], "Input",ExpressionUUID->\
+"006947d9-a325-ca48-8fd4-dc0478ba4769"],
+
+Cell["2. Centro y diferencia (\[CapitalTheta], \[CurlyPhi]): la matriz por \
+sectores", "Section",ExpressionUUID->"133e1689-2949-f241-ae00-46ecde656edc"],
+
+Cell["\<\
+Los bloques de la \[Section]6 de las notas, sobre los c_n = \[Rho]_{n+k,n} de \
+cada sector (k \[GreaterEqual] 0), con el corte de Fock en el nivel d \
+\[Minus] 1.\
+\>", "Text",ExpressionUUID->"b1a4a761-e419-9648-a3b3-0bdbad4d1adb"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"dsec", "[", 
+    RowBox[{"n_", ",", " ", "k_"}], "]"}], " ", ":=", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "\[Kappa]p"}], " ", 
+     RowBox[{"(", 
+      RowBox[{"n", " ", "+", " ", "1", " ", "+", " ", 
+       RowBox[{"k", "/", "2"}]}], ")"}]}], " ", "-", " ", 
+    RowBox[{
+     RowBox[{"\[Kappa]m", "/", "2"}], " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"n", " ", "+", " ", "k"}], ")"}], " ", 
+        RowBox[{"(", 
+         RowBox[{"n", " ", "+", " ", "k", " ", "-", " ", "1"}], ")"}]}], " ", 
+       "+", " ", 
+       RowBox[{"n", " ", 
+        RowBox[{"(", 
+         RowBox[{"n", " ", "-", " ", "1"}], ")"}]}]}], ")"}]}], " ", "+", 
+    "\n", "   ", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"n", " ", "+", " ", "k"}], " ", "==", " ", 
+       RowBox[{"d", " ", "-", " ", "1"}]}], ",", " ", 
+      RowBox[{
+       RowBox[{"\[Kappa]p", " ", 
+        RowBox[{"(", 
+         RowBox[{"n", " ", "+", " ", "1", " ", "+", " ", 
+          RowBox[{"k", "/", "2"}]}], ")"}]}], " ", "-", " ", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"k", " ", ">", " ", "0"}], ",", " ", 
+         RowBox[{"\[Kappa]p", " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"d", " ", "-", " ", "k"}], ")"}], "/", "2"}]}], ",", " ", 
+         "0"}], "]"}]}], ",", " ", "0"}], "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Lk", "[", "k_", "]"}], " ", ":=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Which", "[", 
+      RowBox[{
+       RowBox[{"i", " ", "==", " ", "j"}], ",", " ", 
+       RowBox[{"dsec", "[", 
+        RowBox[{"j", ",", " ", "k"}], "]"}], ",", " ", 
+       RowBox[{"i", " ", "==", " ", 
+        RowBox[{"j", " ", "+", " ", "1"}]}], ",", " ", 
+       RowBox[{"\[Kappa]p", " ", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"j", " ", "+", " ", "1"}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{"j", " ", "+", " ", "k", " ", "+", " ", "1"}], ")"}]}], 
+         "]"}]}], ",", "\n", "    ", 
+       RowBox[{"i", " ", "==", " ", 
+        RowBox[{"j", " ", "-", " ", "2"}]}], ",", " ", 
+       RowBox[{"\[Kappa]m", " ", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{"j", " ", 
+          RowBox[{"(", 
+           RowBox[{"j", " ", "-", " ", "1"}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{"j", " ", "+", " ", "k"}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{"j", " ", "+", " ", "k", " ", "-", " ", "1"}], ")"}]}], 
+         "]"}]}], ",", " ", "True", ",", " ", "0"}], "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", " ", "0", ",", " ", 
+       RowBox[{"d", " ", "-", " ", "1", " ", "-", " ", "k"}]}], "}"}], ",", 
+     " ", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", " ", "0", ",", " ", 
+       RowBox[{"d", " ", "-", " ", "1", " ", "-", " ", "k"}]}], "}"}]}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ak", "[", "k_", "]"}], " ", ":=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Which", "[", 
+      RowBox[{
+       RowBox[{"j", " ", "==", " ", "i"}], ",", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "I"}], "/", "2"}], " ", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{"i", " ", "+", " ", "k"}], "]"}]}], ",", " ", 
+       RowBox[{"j", " ", "==", " ", 
+        RowBox[{"i", " ", "+", " ", "1"}]}], ",", " ", 
+       RowBox[{
+        RowBox[{"I", "/", "2"}], " ", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{"i", " ", "+", " ", "1"}], "]"}]}], ",", " ", "True", ",", 
+       " ", "0"}], "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", " ", "0", ",", " ", 
+       RowBox[{"d", " ", "-", " ", "1", " ", "-", " ", "k"}]}], "}"}], ",", 
+     " ", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", " ", "0", ",", " ", 
+       RowBox[{"d", " ", "-", " ", "k"}]}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Bk", "[", "k_", "]"}], " ", ":=", " ", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"Ak", "[", 
+     RowBox[{"k", " ", "+", " ", "1"}], "]"}], "]"}]}], ";"}]}], "Input",Expre\
+ssionUUID->"e6decf00-941f-324a-9f4c-9b342b72fbf7"],
+
+Cell["\<\
+La matriz tridiagonal por bloques con los sectores k = \[Minus]K, \
+\[Ellipsis], K. Las filas de k < 0 son las conjugadas de las de k > 0, porque \
+x_{\[Minus]k} = x\:0304_k: como \|01d49c_k y \|01d4d1_k son \[Minus]i/2 por \
+una matriz real, sus bloques del forzamiento llevan el signo cambiado.\
+\>", "Text",ExpressionUUID->"778d6bc7-3bac-b74c-b9db-12f92a663de9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"matrizSectores", "[", "K_", "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "bloque", "}"}], ",", "\n", "  ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"bloque", "[", 
+       RowBox[{"r_", ",", " ", "c_"}], "]"}], " ", ":=", " ", 
+      RowBox[{"Which", "[", "\n", "    ", 
+       RowBox[{
+        RowBox[{"r", " ", "==", " ", "c"}], ",", " ", 
+        RowBox[{
+         RowBox[{"Lk", "[", 
+          RowBox[{"Abs", "[", "r", "]"}], "]"}], " ", "-", " ", 
+         RowBox[{"I", " ", "r", " ", "\[CapitalDelta]", " ", 
+          RowBox[{"IdentityMatrix", "[", 
+           RowBox[{"d", " ", "-", " ", 
+            RowBox[{"Abs", "[", "r", "]"}]}], "]"}]}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", ">=", " ", "1"}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", 
+          RowBox[{"r", " ", "-", " ", "1"}]}]}], ",", " ", 
+        RowBox[{"\[ScriptCapitalE]", " ", 
+         RowBox[{"Ak", "[", "r", "]"}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", ">=", " ", "1"}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", 
+          RowBox[{"r", " ", "+", " ", "1"}]}]}], ",", " ", 
+        RowBox[{"\[ScriptCapitalE]", " ", 
+         RowBox[{"Bk", "[", "r", "]"}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", "==", " ", "0"}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", "1"}]}], ",", " ", 
+        RowBox[{"\[ScriptCapitalE]", " ", 
+         RowBox[{"Bk", "[", "0", "]"}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", "==", " ", "0"}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", 
+          RowBox[{"-", "1"}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"-", "\[ScriptCapitalE]"}], " ", 
+         RowBox[{"Bk", "[", "0", "]"}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", "<=", " ", 
+          RowBox[{"-", "1"}]}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", 
+          RowBox[{"r", " ", "-", " ", "1"}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"-", "\[ScriptCapitalE]"}], " ", 
+         RowBox[{"Bk", "[", 
+          RowBox[{"-", "r"}], "]"}]}], ",", "\n", "    ", 
+        RowBox[{
+         RowBox[{"r", " ", "<=", " ", 
+          RowBox[{"-", "1"}]}], " ", "&&", " ", 
+         RowBox[{"c", " ", "==", " ", 
+          RowBox[{"r", " ", "+", " ", "1"}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"-", "\[ScriptCapitalE]"}], " ", 
+         RowBox[{"Ak", "[", 
+          RowBox[{"-", "r"}], "]"}]}], ",", "\n", "    ", "True", ",", " ", 
+        RowBox[{"ConstantArray", "[", 
+         RowBox[{"0", ",", " ", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"d", " ", "-", " ", 
+             RowBox[{"Abs", "[", "r", "]"}]}], ",", " ", 
+            RowBox[{"d", " ", "-", " ", 
+             RowBox[{"Abs", "[", "c", "]"}]}]}], "}"}]}], "]"}]}], "]"}]}], ";",
+      "\n", "  ", 
+     RowBox[{"ArrayFlatten", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"bloque", "[", 
+         RowBox[{"r", ",", " ", "c"}], "]"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"r", ",", " ", 
+          RowBox[{"-", "K"}], ",", " ", "K"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"c", ",", " ", 
+          RowBox[{"-", "K"}], ",", " ", "K"}], "}"}]}], "]"}], "]"}]}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"3b14c8e2-54f0-3846-aafa-e88c05991cf4"],
+
+Cell["\<\
+Con todos los sectores (K = d \[Minus] 1) tiene que ser la matriz de \
+(\[Theta], \[Theta]') reordenada por sectores.\
+\>", "Text",ExpressionUUID->"0870d04b-66fa-b941-801a-014e664f06fd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"o", " ", "=", " ", 
+   RowBox[{"ordenPorSectores", "[", "d", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Simplify", "[", 
+   RowBox[{
+    RowBox[{"matrizSectores", "[", 
+     RowBox[{"d", " ", "-", " ", "1"}], "]"}], " ", "-", " ", 
+    RowBox[{"\[ScriptCapitalL]fase", "[", 
+     RowBox[{"[", 
+      RowBox[{"o", ",", " ", "o"}], "]"}], "]"}]}], "]"}], " ", "===", " ", 
+  RowBox[{"ConstantArray", "[", 
+   RowBox[{"0", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"d", "^", "2"}], ",", " ", 
+      RowBox[{"d", "^", "2"}]}], "}"}]}], "]"}]}]}], "Input",ExpressionUUID->\
+"b77adbc0-d3ef-f543-8a4f-54d5a2841c37"],
+
+Cell["3. Estacionario con corte en K", "Section",ExpressionUUID->"b49f8e28-24a6-7849-83d7-4a3e51264fb7"],
+
+Cell["\<\
+Se guardan los sectores |k| \[LessEqual] K enteros y se tira el resto. \
+\[Rho]K usa la matriz por sectores; \[Rho]Kfase, la de (\[Theta], \[Theta]') \
+restringida a los mismos modos. Tienen que coincidir.\
+\>", "Text",ExpressionUUID->"d31598d4-7eaf-0446-b7ae-3198a398b4ce"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Rho]K", "[", "K_", "]"}], " ", ":=", " ", 
+   RowBox[{"estacionarioEnBanda", "[", 
+    RowBox[{
+     RowBox[{"matrizSectores", "[", "K", "]"}], ",", " ", "d", ",", " ", 
+     "K"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[Rho]Kfase", "[", "K_", "]"}], " ", ":=", " ", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"p", " ", "=", " ", 
+       RowBox[{"posicionesBanda", "[", 
+        RowBox[{"d", ",", " ", "K"}], "]"}]}], "}"}], ",", " ", 
+     RowBox[{"estacionarioEnBanda", "[", 
+      RowBox[{
+       RowBox[{"\[ScriptCapitalL]fase", "[", 
+        RowBox[{"[", 
+         RowBox[{"p", ",", " ", "p"}], "]"}], "]"}], ",", " ", "d", ",", " ", 
+       "K"}], "]"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"Max", "[", 
+    RowBox[{"Abs", "[", 
+     RowBox[{
+      RowBox[{"\[Rho]K", "[", "K", "]"}], " ", "-", " ", 
+      RowBox[{"\[Rho]Kfase", "[", "K", "]"}]}], "]"}], "]"}], ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"K", ",", " ", "0", ",", " ", 
+     RowBox[{"d", " ", "-", " ", "1"}]}], "}"}]}], "]"}]}], "Input",Expression\
+UUID->"7f99e7ca-56d2-6a44-832e-c847e6ec02ce"],
+
+Cell["\<\
+Referencias: todos los sectores (K = d \[Minus] 1, sin corte en k) y el l\
+\[IAcute]mite cu\[AAcute]ntico usual (\[Kappa]m \[RightArrow] \[Infinity], \
+solo |0\:27e9 y |1\:27e9), con \[CapitalPi] = p0 \[Minus] p1.\
+\>", "Text",ExpressionUUID->"64cb037e-2223-104a-bbd7-f65a50655cf2"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ref", " ", "=", " ", 
+   RowBox[{"\[Rho]K", "[", 
+    RowBox[{"d", " ", "-", " ", "1"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"\[CapitalPi]0", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"9", " ", 
+       RowBox[{"\[Kappa]p", "^", "2"}]}], " ", "+", " ", 
+      RowBox[{"4", " ", 
+       RowBox[{"\[CapitalDelta]", "^", "2"}]}]}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"27", " ", 
+       RowBox[{"\[Kappa]p", "^", "2"}]}], " ", "+", " ", 
+      RowBox[{"12", " ", 
+       RowBox[{"\[CapitalDelta]", "^", "2"}]}], " ", "+", " ", 
+      RowBox[{"6", " ", 
+       RowBox[{"\[ScriptCapitalE]", "^", "2"}]}]}], ")"}]}]}], ";"}], "\n", 
+ RowBox[{"limiteUsual", " ", "=", " ", 
+  RowBox[{"N", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"1", " ", "+", " ", "\[CapitalPi]0"}], ")"}], "/", "2"}], ",", 
+     " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"1", " ", "-", " ", "\[CapitalPi]0"}], ")"}], "/", "2"}], ",", 
+     " ", 
+     RowBox[{
+      RowBox[{"-", "I"}], " ", "\[ScriptCapitalE]", " ", 
+      RowBox[{"\[CapitalPi]0", "/", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"3", " ", "\[Kappa]p"}], " ", "+", " ", 
+         RowBox[{"2", " ", "I", " ", "\[CapitalDelta]"}]}], ")"}]}]}]}], 
+    "}"}], "]"}]}]}], "Input",ExpressionUUID->"5803a026-8ab4-d54a-8d5a-\
+81e22224ef44"],
+
+Cell["Elige aqu\[IAcute] el corte K (de 0 a d \[Minus] 1) y vuelve a \
+evaluar.", "Text",ExpressionUUID->"d1c9d8d0-25c8-8348-9660-d97a8677d880"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"K", " ", "=", " ", "1"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"\[Rho]corte", " ", "=", " ", 
+   RowBox[{"\[Rho]K", "[", "K", "]"}]}], ";"}], "\n", 
+ RowBox[{"TableForm", "[", 
+  RowBox[{
+   RowBox[{"{", "\n", "  ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"\"\<corte |k| \[LessEqual] \>\"", " ", "<>", " ", 
+        RowBox[{"ToString", "[", "K", "]"}]}], ",", " ", 
+       RowBox[{"\[Rho]corte", "[", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", " ", "1"}], "]"}], "]"}], ",", " ", 
+       RowBox[{"\[Rho]corte", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ",", " ", "2"}], "]"}], "]"}], ",", " ", 
+       RowBox[{"\[Rho]corte", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], "}"}], ",", "\n", "  ", 
+     RowBox[{"{", 
+      RowBox[{"\"\<todos los sectores\>\"", ",", " ", 
+       RowBox[{"ref", "[", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", " ", "1"}], "]"}], "]"}], ",", " ", 
+       RowBox[{"ref", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ",", " ", "2"}], "]"}], "]"}], ",", " ", 
+       RowBox[{"ref", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], "}"}], ",", "\n", "  ", 
+     RowBox[{"{", 
+      RowBox[{"\"\<l\[IAcute]mite cu\[AAcute]ntico usual\>\"", ",", " ", 
+       RowBox[{"limiteUsual", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+       RowBox[{"limiteUsual", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], ",", " ", 
+       RowBox[{"limiteUsual", "[", 
+        RowBox[{"[", "3", "]"}], "]"}]}], "}"}]}], "}"}], ",", "\n", " ", 
+   RowBox[{"TableHeadings", " ", "->", " ", 
+    RowBox[{"{", 
+     RowBox[{"None", ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"\"\<\>\"", ",", " ", "\"\<p0\>\"", ",", " ", "\"\<p1\>\"", ",",
+         " ", "\"\<\[Rho]10\>\""}], "}"}]}], "}"}]}]}], "]"}], "\n", 
+ RowBox[{
+  RowBox[{"Abs", "[", 
+   RowBox[{
+    RowBox[{"\[Rho]corte", "[", 
+     RowBox[{"[", 
+      RowBox[{"2", ",", " ", "1"}], "]"}], "]"}], " ", "-", " ", 
+    RowBox[{"ref", "[", 
+     RowBox[{"[", 
+      RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], "]"}], "  ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"error", " ", "del", " ", "corte", " ", "en", " ", "\[Rho]10"}], 
+   " ", "*)"}]}]}], "Input",ExpressionUUID->"aa3e822f-b7a3-e242-b977-\
+41f26e4a10fb"],
+
+Cell["\<\
+C\[OAcute]mo mejora al subir K: error de \[Rho]10 respecto a todos los \
+sectores. Con K = 0 no hay coherencias (son las poblaciones sin forzamiento); \
+cada sector m\[AAcute]s gana varios \[OAcute]rdenes de magnitud.\
+\>", "Text",ExpressionUUID->"14dbd673-ec33-2d4c-ac58-8d906360eccb"],
+
+Cell[BoxData[
+ RowBox[{"TableForm", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"k", ",", " ", 
+       RowBox[{"Abs", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"\[Rho]K", "[", "k", "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", " ", "1"}], "]"}], "]"}], " ", "-", " ", 
+         RowBox[{"ref", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], "]"}]}], "}"}], ",", 
+     " ", 
+     RowBox[{"{", 
+      RowBox[{"k", ",", " ", "0", ",", " ", 
+       RowBox[{"d", " ", "-", " ", "1"}]}], "}"}]}], "]"}], ",", "\n", " ", 
+   RowBox[{"TableHeadings", " ", "->", " ", 
+    RowBox[{"{", 
+     RowBox[{"None", ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"\"\<K\>\"", ",", 
+        " ", "\"\<|\[Rho]10(K) \[Minus] \[Rho]10(todos)|\>\""}], "}"}]}], 
+     "}"}]}]}], "]"}]], "Input",ExpressionUUID->"1f0c5ad9-0107-d64a-85ba-\
+c831d8146a5a"],
+
+Cell["\<\
+El l\[IAcute]mite cu\[AAcute]ntico usual difiere de \[LeftGuillemet]todos los \
+sectores\[RightGuillemet] en una cantidad de orden 1/\[Kappa]m: es el error \
+de quedarse solo con |0\:27e9 y |1\:27e9, no el del corte en k.\
+\>", "Text",ExpressionUUID->"908ce9d1-c187-cd48-b5f9-ee084c71c2c0"],
+
+Cell["4. La distribuci\[OAcute]n de fase seg\[UAcute]n el corte", "Section",ExpressionUUID->"5adcbf26-0901-ea42-8b21-1cfb27e26ed9"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Pnum", "[", 
+    RowBox[{"\[Rho]_", ",", " ", "t_"}], "]"}], " ", ":=", " ", 
+   RowBox[{
+    RowBox[{"Re", "[", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"\[Rho]", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"n", " ", "+", " ", "1"}], ",", " ", 
+           RowBox[{"m", " ", "+", " ", "1"}]}], "]"}], "]"}], " ", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "I"}], " ", 
+          RowBox[{"(", 
+           RowBox[{"n", " ", "-", " ", "m"}], ")"}], " ", "t"}], "]"}]}], ",",
+        " ", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", " ", "0", ",", " ", 
+         RowBox[{"d", " ", "-", " ", "1"}]}], "}"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"m", ",", " ", "0", ",", " ", 
+         RowBox[{"d", " ", "-", " ", "1"}]}], "}"}]}], "]"}], "]"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"2", " ", "Pi"}], ")"}]}]}], ";"}], "\n", 
+ RowBox[{"Manipulate", "[", "\n", " ", 
+  RowBox[{
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Pnum", "[", 
+        RowBox[{
+         RowBox[{"\[Rho]K", "[", "K", "]"}], ",", " ", "t"}], "]"}], ",", " ", 
+       RowBox[{"Pnum", "[", 
+        RowBox[{"ref", ",", " ", "t"}], "]"}]}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", " ", "0", ",", " ", 
+       RowBox[{"2", " ", "Pi"}]}], "}"}], ",", " ", 
+     RowBox[{"PlotRange", " ", "->", " ", "All"}], ",", "\n", "  ", 
+     RowBox[{"PlotStyle", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"Thick", ",", " ", "Dashed"}], "}"}]}], ",", " ", 
+     RowBox[{"PlotLegends", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"\"\<|k| \[LessEqual] K\>\"", ",", 
+        " ", "\"\<todos los sectores\>\""}], "}"}]}], ",", "\n", "  ", 
+     RowBox[{"AxesLabel", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"\"\<\[Theta]\>\"", ",", " ", "\"\<P(\[Theta])\>\""}], 
+       "}"}]}]}], "]"}], ",", "\n", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"K", ",", " ", "1"}], "}"}], ",", " ", "0", ",", " ", 
+     RowBox[{"d", " ", "-", " ", "1"}], ",", " ", "1"}], "}"}]}], 
+  "]"}]}], "Input",ExpressionUUID->"4c34509b-a909-a245-932a-b9dcd4cefc0c"]
+},
+FrontEndVersion->"14.3 para Microsoft Windows (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"fa2d2777-fe0c-ec42-9f93-454041087b65"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[554, 20, 158, 2, 70, "Title",ExpressionUUID->"7c3d1338-b270-e541-8798-9ddf93df677b"],
+Cell[715, 24, 606, 8, 70, "Text",ExpressionUUID->"f4892a32-a639-c948-b13a-8c463df5b399"],
+Cell[1324, 34, 105, 0, 70, "Section",ExpressionUUID->"d3d833d0-2fe4-2a42-9565-14da248ab550"],
+Cell[1432, 36, 282, 7, 70, "Input",ExpressionUUID->"26c6c21c-b479-9745-92fd-2f84274c5915"],
+Cell[1717, 45, 220, 3, 70, "Text",ExpressionUUID->"2b51a0a6-b4fe-a448-a2fb-9725323073be"],
+Cell[1940, 50, 1013, 28, 70, "Input",ExpressionUUID->"8e9fa79d-d840-cb40-8a7c-0b6fabd40c07"],
+Cell[2956, 80, 103, 0, 70, "Section",ExpressionUUID->"6491a513-2681-764c-ad9a-ecc02b07752f"],
+Cell[3062, 82, 358, 6, 70, "Text",ExpressionUUID->"17cce7ca-81e3-ed49-bbbb-686066380d2b"],
+Cell[3423, 90, 663, 17, 70, "Input",ExpressionUUID->"006947d9-a325-ca48-8fd4-dc0478ba4769"],
+Cell[4089, 109, 153, 1, 70, "Section",ExpressionUUID->"133e1689-2949-f241-ae00-46ecde656edc"],
+Cell[4245, 112, 242, 4, 70, "Text",ExpressionUUID->"b1a4a761-e419-9648-a3b3-0bdbad4d1adb"],
+Cell[4490, 118, 4200, 116, 70, "Input",ExpressionUUID->"e6decf00-941f-324a-9f4c-9b342b72fbf7"],
+Cell[8693, 236, 375, 5, 70, "Text",ExpressionUUID->"778d6bc7-3bac-b74c-b9db-12f92a663de9"],
+Cell[9071, 243, 3433, 82, 70, "Input",ExpressionUUID->"3b14c8e2-54f0-3846-aafa-e88c05991cf4"],
+Cell[12507, 327, 196, 3, 70, "Text",ExpressionUUID->"0870d04b-66fa-b941-801a-014e664f06fd"],
+Cell[12706, 332, 660, 18, 70, "Input",ExpressionUUID->"b77adbc0-d3ef-f543-8a4f-54d5a2841c37"],
+Cell[13369, 352, 104, 0, 70, "Section",ExpressionUUID->"b49f8e28-24a6-7849-83d7-4a3e51264fb7"],
+Cell[13476, 354, 284, 4, 70, "Text",ExpressionUUID->"d31598d4-7eaf-0446-b7ae-3198a398b4ce"],
+Cell[13763, 360, 1198, 33, 70, "Input",ExpressionUUID->"7f99e7ca-56d2-6a44-832e-c847e6ec02ce"],
+Cell[14964, 395, 292, 4, 70, "Text",ExpressionUUID->"64cb037e-2223-104a-bbd7-f65a50655cf2"],
+Cell[15259, 401, 1429, 42, 70, "Input",ExpressionUUID->"5803a026-8ab4-d54a-8d5a-81e22224ef44"],
+Cell[16691, 445, 144, 1, 70, "Text",ExpressionUUID->"d1c9d8d0-25c8-8348-9660-d97a8677d880"],
+Cell[16838, 448, 2336, 60, 70, "Input",ExpressionUUID->"aa3e822f-b7a3-e242-b977-41f26e4a10fb"],
+Cell[19177, 510, 296, 4, 70, "Text",ExpressionUUID->"14dbd673-ec33-2d4c-ac58-8d906360eccb"],
+Cell[19476, 516, 949, 27, 70, "Input",ExpressionUUID->"1f0c5ad9-0107-d64a-85ba-c831d8146a5a"],
+Cell[20428, 545, 300, 4, 70, "Text",ExpressionUUID->"908ce9d1-c187-cd48-b5f9-ee084c71c2c0"],
+Cell[20731, 551, 131, 0, 70, "Section",ExpressionUUID->"5adcbf26-0901-ea42-8b21-1cfb27e26ed9"],
+Cell[20865, 553, 2250, 60, 70, "Input",ExpressionUUID->"4c34509b-a909-a245-932a-b9dcd4cefc0c"]
+}
+]
+*)
+
+(* End of internal cache information *)
