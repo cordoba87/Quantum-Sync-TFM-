@@ -56,4 +56,4 @@ Si se trabaja en otro ordenador, antes de empezar: `git pull`.
 
 GitHub ofrece la cita en el botón **Cite this repository** (sale de `CITATION.cff`).
 En LaTeX, la entrada está en `Notas/bibliografia.bib` con la clave
-`cordobaburgueno2026quantum`.
+`github2026TFM`.
