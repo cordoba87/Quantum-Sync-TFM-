@@ -34,6 +34,3 @@ comprobación.
 Cada cuaderno carga en su sección 0 el paquete `RepresentacionFase.wl` de su misma
 carpeta. Basta con abrirlo y evaluarlo.
 
-## Citar
-
-GitHub ofrece la cita en el botón **Cite this repository** (sale de `CITATION.cff`).
