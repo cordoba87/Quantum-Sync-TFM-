@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this code, please cite it as below."
 type: software
-title: "Quantum synchronization in the phase representation: code and notes for the master's thesis"
+title: "Quantum synchronization in the phase representation: Mathematica code for the master's thesis"
 abstract: >-
-  Mathematica code and LaTeX notes for the master's thesis "Low Dimensional
+  Mathematica code for the master's thesis "Low Dimensional
   Topological Lattices for the Transfer of Quantum Information" (Máster en Física
   Teórica, Universidad Complutense de Madrid, 2026-27), supervised by Gloria Platero
   and Álvaro Gómez-León. The quantum van der Pol oscillator is solved with the

@@ -22,6 +22,10 @@ build/
 *.synctex*
 *.toc
 
+# --- Notas en LaTeX y su configuración de VS Code: no se publican ---
+Notas/
+.vscode/
+
 # --- Material de trabajo que, de momento, no es para los tutores ---
 Guia/
 reports/
