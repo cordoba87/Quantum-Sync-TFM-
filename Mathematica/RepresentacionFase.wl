@@ -15,7 +15,9 @@
      Ojo: E es el número e en Mathematica; para la amplitud del forzamiento usa ℰ.
    - Desde el 2026-11-05: centro y diferencia (Θ, φ), sectores k y corte |k| ≤ K
      (nucleoCD, vectorSector, nucleoSector, ordenPorSectores, posicionesBanda,
-     estacionarioEnBanda). Lo anterior se revisó y comprobó ese día sin cambios. *)
+     estacionarioEnBanda). Lo anterior se revisó y comprobó ese día sin cambios.
+   - 2026-11-10: estacionarioEnBanda hacía Chop con la tolerancia por defecto (10^-10) y
+     anulaba elementos de ρ de verdad; ahora solo quita el ruido de redondeo (10^-15). *)
 
 BeginPackage["RepresentacionFase`"];
 
@@ -53,7 +55,7 @@ vectorSector::usage = "vectorSector[ρ, k] = x_k: la diagonal k de ρ en columna
 nucleoSector::usage = "nucleoSector[ρ, k] = K_k(φ) = Σ_n c_n e^{-i(n+|k|/2)φ}, con c_n = vectorSector[ρ, k]. Cumple K(Θ, φ) = Σ_k e^{-ikΘ} K_k(φ).";
 ordenPorSectores::usage = "ordenPorSectores[d] da las posiciones de vecFLS ordenadas como en la §6 de las notas: k = -(d-1), …, d-1 y, dentro de cada sector, n creciente. ℒ[[o, o]] con o = ordenPorSectores[d] es la matriz tridiagonal por bloques.";
 posicionesBanda::usage = "posicionesBanda[d, K] da las posiciones de vecFLS con |n - m| ≤ K (el corte en k), en el mismo orden que ordenPorSectores.";
-estacionarioEnBanda::usage = "estacionarioEnBanda[M, d, K] resuelve M·x = 0 con Tr ρ = 1, donde M es la matriz restringida a |n - m| ≤ K y escrita en el orden de posicionesBanda[d, K]. Devuelve ρ (d×d, con ceros fuera de la banda). Trabaja con números.";
+estacionarioEnBanda::usage = "estacionarioEnBanda[M, d, K] resuelve M·x = 0 con Tr ρ = 1, donde M es la matriz restringida a |n - m| ≤ K y escrita en el orden de posicionesBanda[d, K]. Devuelve ρ (d×d, con ceros fuera de la banda). Trabaja con números; pone a cero solo lo que está por debajo de 10^-15 (el redondeo de la máquina).";
 
 matrizFock::orden = "Hay un producto de operadores escrito con * (conmutativo). Usa ** para fijar el orden.";
 matrizFock::forma = "No sé traducir `1` a matriz.";
@@ -221,7 +223,7 @@ estacionarioEnBanda[M_?MatrixQ, d_Integer, K_Integer] := Module[
   A[[fila00]] = If[MemberQ[Table[n + d n + 1, {n, 0, d - 1}], #], 1., 0.] & /@ pos;  (* Tr ρ = 1 *)
   x = LinearSolve[A, UnitVector[Length[pos], fila00]];
   v = ConstantArray[0., d^2]; v[[pos]] = x;
-  Chop[matrizDeVec[v, d]]];
+  Chop[matrizDeVec[v, d], 10^-15]];   (* solo el ruido de redondeo; el Chop por defecto (10^-10) borraba elementos de verdad *)
 
 End[];
 EndPackage[];

@@ -2359,7 +2359,8 @@ Cell["7.2 Comparaci\[OAcute]n con la banda num\[EAcute]rica", "Subsection",Expre
 Cell["\<\
 Con \[Kappa]m = 20\[Kappa]p (r = 1/20) y \[ScriptCapitalE] = \[Kappa]p. Sumas \
 parciales de la serie hasta r^J, frente a la banda num\[EAcute]rica de \
-vdp_corte_k.nb (con d = 18) y a Fock exacto. Columnas: G(\[Minus]1) (la \
+vdp_corte_k.nb (con d = 14) y a la referencia (Fock con 14 niveles). \
+Columnas: G(\[Minus]1) (la \
 paridad), \:27e8a\:27e9 = B1(1), \[Rho]10 = b0 y R = |\:27e8\[CapitalEHat]\
 \:27e9|.\
 \>", "Text",ExpressionUUID->"71aaa4c4-2206-ac4c-892a-727f242cb4d0"],
@@ -2382,7 +2383,7 @@ Cell[BoxData[{
       RowBox[{"banda", " ", "=", " ", 
        RowBox[{"lectRhoK", "[", 
         RowBox[{"estBandaK", "[", 
-         RowBox[{"18", ",", " ", "nK", ",", " ", 
+         RowBox[{"14", ",", " ", "nK", ",", " ",
           RowBox[{"{", 
            RowBox[{"1.", ",", " ", "20.", ",", " ", 
             RowBox[{"N", "[", "del", "]"}], ",", " ", "1."}], "}"}]}], "]"}], 
@@ -2390,7 +2391,7 @@ Cell[BoxData[{
       RowBox[{"fock", " ", "=", " ", 
        RowBox[{"lectRhoK", "[", 
         RowBox[{"estBandaK", "[", 
-         RowBox[{"18", ",", " ", "17", ",", " ", 
+         RowBox[{"14", ",", " ", "13", ",", " ",
           RowBox[{"{", 
            RowBox[{"1.", ",", " ", "20.", ",", " ", 
             RowBox[{"N", "[", "del", "]"}], ",", " ", "1."}], "}"}]}], "]"}], 
@@ -2432,14 +2433,14 @@ Cell[BoxData[{
                RowBox[{"banda", ",", " ", 
                 RowBox[{"10", "^", 
                  RowBox[{"-", "14"}]}]}], "]"}], ",", 
-              " ", "\"\<banda numerica (d = 18)\>\""}], "]"}], ",", " ", 
+              " ", "\"\<banda numerica (d = 14)\>\""}], "]"}], ",", " ",
             RowBox[{"Prepend", "[", 
              RowBox[{
               RowBox[{"Chop", "[", 
                RowBox[{"fock", ",", " ", 
                 RowBox[{"10", "^", 
                  RowBox[{"-", "14"}]}]}], "]"}], ",", 
-              " ", "\"\<Fock exacto\>\""}], "]"}]}], "}"}]}], "]"}], ",", 
+              " ", "\"\<referencia (Fock, 14 niveles)\>\""}], "]"}]}], "}"}]}], "]"}], ",",
         "\n", "    ", 
         RowBox[{"TableHeadings", " ", "->", " ", 
          RowBox[{"{", 
@@ -2472,11 +2473,11 @@ Cell[BoxData[{
    RowBox[{"Spacings", " ", "->", " ", "1.5"}]}], "]"}]}], "Input",ExpressionUUID->"8194a0ba-8a91-fb48-ab13-42a866ae7755"],
 
 Cell["\<\
-La serie converge a la banda: con K = 1 y \[CapitalDelta] = 0, \[Rho]10 = \
-\[Minus]0,11141423819459 i en los dos casos (coinciden en 14 cifras), y las \
-dem\[AAcute]s columnas hasta 10\:207b\.b9\:2070, que es la precisi\[OAcute]n \
-de la banda num\[EAcute]rica. Con K = 2 converge a la banda K = 2, que ya est\
-\[AAcute] a 10\:207b\:2076 de Fock exacto. El orden 0 es Bloch (\[Rho]10 = \
+La serie converge a la banda: con K = 1 y \[CapitalDelta] = 0, a orden \
+r\.b9\.b2 las cuatro columnas coinciden con ella hasta 10\:207b\.b9\:2074, y a \
+orden r\.b9\:2074 hasta la precisi\[OAcute]n de la m\[AAcute]quina. Con K = 2 \
+converge a la banda K = 2, que ya est\[AAcute] a 10\:207b\:2076 de la \
+referencia. El orden 0 es Bloch (\[Rho]10 = \
 \[Minus]i/11, un 18 % por debajo); el orden r se pasa un 2,4 %, el orden \
 r\.b2 est\[AAcute] a un 0,2 % y el orden r\:2074 a 10\:207b\:2076.\
 \>", "Text",ExpressionUUID->"f9ef20d4-6e35-ef47-9752-103cb86a4b0c"]
