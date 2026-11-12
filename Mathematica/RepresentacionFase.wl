@@ -17,7 +17,10 @@
      (nucleoCD, vectorSector, nucleoSector, ordenPorSectores, posicionesBanda,
      estacionarioEnBanda). Lo anterior se revisó y comprobó ese día sin cambios.
    - 2026-11-10: estacionarioEnBanda hacía Chop con la tolerancia por defecto (10^-10) y
-     anulaba elementos de ρ de verdad; ahora solo quita el ruido de redondeo (10^-15). *)
+     anulaba elementos de ρ de verdad; ahora solo quita el ruido de redondeo (10^-15).
+   - 2026-11-12: dos osciladores (lindbladFase2, generatriz2, sectorDesdeGeneratriz2). El
+     núcleo se escribe como polinomio en u_j = e^{-iθ_j} y v_j = e^{iθ_j'}, y se usan las
+     mismas reglas (41)–(42) de un oscilador, cada una en su par de variables. Sin d. *)
 
 BeginPackage["RepresentacionFase`"];
 
@@ -56,6 +59,10 @@ nucleoSector::usage = "nucleoSector[ρ, k] = K_k(φ) = Σ_n c_n e^{-i(n+|k|/2)φ
 ordenPorSectores::usage = "ordenPorSectores[d] da las posiciones de vecFLS ordenadas como en la §6 de las notas: k = -(d-1), …, d-1 y, dentro de cada sector, n creciente. ℒ[[o, o]] con o = ordenPorSectores[d] es la matriz tridiagonal por bloques.";
 posicionesBanda::usage = "posicionesBanda[d, K] da las posiciones de vecFLS con |n - m| ≤ K (el corte en k), en el mismo orden que ordenPorSectores.";
 estacionarioEnBanda::usage = "estacionarioEnBanda[M, d, K] resuelve M·x = 0 con Tr ρ = 1, donde M es la matriz restringida a |n - m| ≤ K y escrita en el orden de posicionesBanda[d, K]. Devuelve ρ (d×d, con ceros fuera de la banda). Trabaja con números; pone a cero solo lo que está por debajo de 10^-15 (el redondeo de la máquina).";
+
+lindbladFase2::usage = "lindbladFase2[p, H, saltos, vars] = ∂t K para dos osciladores, con el diccionario de fase (reglas 41–42) aplicado a cada oscilador en su par de variables, sin truncar. p es el núcleo escrito como polinomio en vars = {{u1, v1}, {u2, v2}}, con u_j = e^{-iθ_j} y v_j = e^{iθ_j'}. Un operador es una lista de términos {coef, monomio}, y un monomio es una lista {{op, j}, …} leída como producto de izquierda a derecha (op = a o ad; j = 1, 2): a_1 = {{1, {{a, 1}}}}, a_1 + a_2 = {{1, {{a, 1}}}, {1, {{a, 2}}}}, a_1² = {{1, {{a, 1}, {a, 1}}}}. H es un operador y saltos = {{tasa, operador}, …}.";
+generatriz2::usage = "generatriz2[p, {k1, k2}, vars, {z1, z2}] = B_{k1k2}(z1, z2) del sector (k1, k2) del núcleo p (polinomio en vars): pesa cada coeficiente como en un oscilador, b = √((n+|k|)!/n!) por oscilador, con n el menor de los dos índices, y lo pone en z^n.";
+sectorDesdeGeneratriz2::usage = "sectorDesdeGeneratriz2[B, {k1, k2}, {z1, z2}, {φ1, φ2}] = K_{k1k2}(φ1, φ2) = Σ c e^{-i(n1+|k1|/2)φ1} e^{-i(n2+|k2|/2)φ2}, deshaciendo los pesos de generatriz2. B tiene que ser un polinomio en z1, z2.";
 
 matrizFock::orden = "Hay un producto de operadores escrito con * (conmutativo). Usa ** para fijar el orden.";
 matrizFock::forma = "No sé traducir `1` a matriz.";
@@ -224,6 +231,40 @@ estacionarioEnBanda[M_?MatrixQ, d_Integer, K_Integer] := Module[
   x = LinearSolve[A, UnitVector[Length[pos], fila00]];
   v = ConstantArray[0., d^2]; v[[pos]] = x;
   Chop[matrizDeVec[v, d], 10^-15]];   (* solo el ruido de redondeo; el Chop por defecto (10^-10) borraba elementos de verdad *)
+
+(* ---------- Dos osciladores ----------
+   Cada oscilador j tiene su par {u_j, v_j}. Las reglas son las de izq1/der1 (sin d):
+   aρ → u^{-1}√D_u, a†ρ → u√(D_u+1), ρa → v√(D_v+1), ρa† → v^{-1}√D_v. *)
+
+izqPar[a, {u_, v_}, p_] := Expand[u^-1 fUV[Sqrt[#] &, p, u]];
+izqPar[ad, {u_, v_}, p_] := Expand[u fUV[Sqrt[# + 1] &, p, u]];
+derPar[a, {u_, v_}, p_] := Expand[v fUV[Sqrt[# + 1] &, p, v]];
+derPar[ad, {u_, v_}, p_] := Expand[v^-1 fUV[Sqrt[#] &, p, v]];
+
+(* monomio {{op1, j1}, {op2, j2}, …} = op1 op2 …: por la izquierda actúa primero el de la derecha *)
+izqMon[mon_List, vars_, p_] := Fold[izqPar[#2[[1]], vars[[#2[[2]]]], #1] &, p, Reverse[mon]];
+derMon[mon_List, vars_, p_] := Fold[derPar[#2[[1]], vars[[#2[[2]]]], #1] &, p, mon];
+dagaMon[mon_List] := Reverse[mon /. {{a, j_} :> {ad, j}, {ad, j_} :> {a, j}}];
+
+lindbladFase2[p_, h_List, saltos_List, vars_] := Expand[
+  -I Sum[t[[1]] (izqMon[t[[2]], vars, p] - derMon[t[[2]], vars, p]), {t, h}] +
+   Sum[s[[1]] Sum[l[[1]] Conjugate[m[[1]]] (
+        izqMon[l[[2]], vars, derMon[dagaMon[m[[2]]], vars, p]] -
+         1/2 izqMon[Join[dagaMon[m[[2]]], l[[2]]], vars, p] -
+         1/2 derMon[Join[dagaMon[m[[2]]], l[[2]]], vars, p]), {l, s[[2]]}, {m, s[[2]]}], {s, saltos}]];
+
+(* peso de un oscilador: índices (n, m) del ket y del bra; z a la potencia del menor *)
+pesoOsc[n_, m_] := Sqrt[Max[n, m]!/Min[n, m]!];
+
+generatriz2[p_, {k1_Integer, k2_Integer}, vars_, {z1_, z2_}] := Total[
+  Cases[CoefficientRules[Expand[p], Flatten[vars]],
+   ({n1_, m1_, n2_, m2_} -> c_) /; n1 - m1 == k1 && n2 - m2 == k2 :>
+    c pesoOsc[n1, m1] pesoOsc[n2, m2] z1^Min[n1, m1] z2^Min[n2, m2]]];
+
+sectorDesdeGeneratriz2[B_, {k1_Integer, k2_Integer}, {z1_, z2_}, {f1_, f2_}] := Total[
+  Cases[CoefficientRules[Expand[B], {z1, z2}],
+   ({s1_, s2_} -> b_) :> b/(pesoOsc[s1 + Abs[k1], s1] pesoOsc[s2 + Abs[k2], s2]) *
+     Exp[-I (s1 + Abs[k1]/2) f1 - I (s2 + Abs[k2]/2) f2]]];
 
 End[];
 EndPackage[];
