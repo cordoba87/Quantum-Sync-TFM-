@@ -27,7 +27,7 @@ comprobación.
 | `Mathematica/vdp_funcion_generatriz.nb` | Sector $k=0$ sin truncar Fock: función generatriz $G(z)$, ecuación de Kummer y comparación con Fock. |
 | `Mathematica/vdp_forzado_fase.nb` | El caso forzado escrito directamente en la representación de fase. |
 | `Mathematica/vdp_corte_k.nb` | Corte en sectores $\vert k\vert \le K$: estacionario en la banda y cómo cambia la distribución de fase con el corte. |
-| `Mathematica/vdp_dos_osciladores_fase.nb` | Dos VdP con acoplo disipativo $\gamma_c\mathcal{D}[a_1+a_2]$ solo en la representación de fase, sin Fock: ecuaciones desde el diccionario de fase, límites con solución cerrada y estacionario con $r=0.05$ como serie en $r$; distribución de la fase relativa y núcleo. |
+| `Mathematica/vdp_dos_osciladores_fase.nb` | Dos VdP con acoplo disipativo $\gamma_c\mathcal{D}[a_1+a_2]$ solo en la representación de fase, sin Fock: ecuaciones desde el diccionario de fase, límites con solución cerrada y estacionario con $r=0.05$ como serie en $r$; distribución de la fase relativa, núcleo y lenguas de Arnold con frecuencias distintas. |
 | `Mathematica/figuras/` | Figuras exportadas de los cuadernos. |
 
 ## Cómo se usa
