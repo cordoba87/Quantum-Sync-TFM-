@@ -1,9 +1,10 @@
 # Sincronización cuántica en la representación de fase
 
-*Código de Mathematica del Trabajo de Fin de Máster*
+*Código de Mathematica y de Python (QuTiP) del Trabajo de Fin de Máster*
 
 ![TFM](https://img.shields.io/badge/TFM-UCM%202026--27-1f6feb)
 ![Wolfram Mathematica](https://img.shields.io/badge/Wolfram-Mathematica-dd1100?logo=wolframmathematica&logoColor=white)
+![QuTiP](https://img.shields.io/badge/QuTiP-5.3-3776ab?logo=python&logoColor=white)
 
 **Mario Córdoba Burgueño**, con **Gloria Platero** y **Álvaro Gómez-León**<br>
 Máster en Física Teórica, Universidad Complutense de Madrid, 2026–27<br>
@@ -29,9 +30,16 @@ comprobación.
 | `Mathematica/vdp_corte_k.nb` | Corte en sectores $\vert k\vert \le K$: estacionario en la banda y cómo cambia la distribución de fase con el corte. |
 | `Mathematica/vdp_dos_osciladores_fase.nb` | Dos VdP con acoplo disipativo $\gamma_c\mathcal{D}[a_1+a_2]$ solo en la representación de fase, sin Fock: ecuaciones desde el diccionario de fase, límites con solución cerrada y estacionario con $r=0.05$ como serie en $r$; distribución de la fase relativa, núcleo y lenguas de Arnold con frecuencias distintas. |
 | `Mathematica/figuras/` | Figuras exportadas de los cuadernos. |
+| `QuTiP/intro_qutip.ipynb` | Introducción a QuTiP con el mismo modelo y los mismos convenios que el paquete: estacionario, liouvilliano por sectores $k$, evolución temporal, $P(\theta)$, correlación a dos tiempos y dos osciladores con $\gamma_c\mathcal{D}[a_1+a_2]$. Comprobado contra `RepresentacionFase.wl`: mismo liouvilliano y mismo estacionario hasta el redondeo. |
 
 ## Cómo se usa
 
 Cada cuaderno carga en su sección 0 el paquete `RepresentacionFase.wl` de su misma
 carpeta. Basta con abrirlo y evaluarlo.
+
+El cuaderno de `QuTiP/` necesita Python 3.12 con `qutip` 5.3, `numpy` y `matplotlib`:
+
+```
+pip install qutip==5.3.1 matplotlib ipykernel
+```
 
